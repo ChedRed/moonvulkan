@@ -5,6 +5,11 @@ else
 LINUX=1
 endif
 
+UNAME_S := $(shell uname -s)
+ifeq ($(UNAME_S),Darwin)
+MACOS=1
+endif
+
 # Lua version
 LUAVER?=$(shell lua -e 'print(string.match(_VERSION, "%d+%.%d+") or "5.3")')
 ifeq ($(LUAVER),)
@@ -36,7 +41,7 @@ endif
 Tgt	:= moonvulkan
 Src := $(wildcard *.c)
 Objs := $(Src:.c=.o)
- 
+
 COPT	+= -O2
 #COPT	+= -O0 -g
 #COPT	+= -m32
@@ -50,6 +55,10 @@ COPT    += -fpic
 COPT	+= -DLINUX
 INCDIR = -I/usr/include/lua$(LUAVER)
 LIBDIR =
+endif
+ifdef MACOS
+INCDIR = -I/opt/homebrew/include/lua$(LUAVER)
+LIBDIR = /opt/homebrew/lib/liblua.5.4.7.dylib
 endif
 ifdef MINGW
 COPT	+= -DMINGW
@@ -145,7 +154,7 @@ uninstall:
 	@-rm -fr $(L_DIR)/$(Tgt)
 	@-rm -f $(C_DIR)/$(Tgt).dll
 
-build:	clean $(Tgt) 
+build:	clean $(Tgt)
 
 symbols: build
 	@objdump -T $(Tgt).so > $(Tgt).symbols
@@ -159,4 +168,3 @@ ifdef MINGW
 endif
 	@-rm -f $(Objs)
 	@echo
-

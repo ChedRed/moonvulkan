@@ -33,6 +33,8 @@
 #include <string.h>
 #include <stdlib.h>
 #include <time.h>
+#include <sys/time.h>
+#include <unistd.h>
 #include "moonvulkan.h"
 
 #ifdef VK_USE_PLATFORM_WIN32_KHR
@@ -60,7 +62,7 @@
 
 /* utils.c */
 #define noprintf moonvulkan_noprintf
-int noprintf(const char *fmt, ...); 
+int noprintf(const char *fmt, ...);
 #define now moonvulkan_now
 double now(void);
 #define since(t) (now() - (t))
@@ -258,13 +260,13 @@ void moonvulkan_open_datahandling(lua_State *L);
     ts = now();                                             \
 } while(0);
 
-#else 
+#else
 
 #define DBG noprintf
 #define TR()
 #define BK()
-#define TSTART do {} while(0) 
-#define TSTOP do {} while(0)    
+#define TSTART do {} while(0)
+#define TSTOP do {} while(0)
 
 #endif /* DEBUG ------------------------------------------------- */
 
